@@ -13,48 +13,32 @@ import java.io.IOException;
 @Component
 public class Watermark {
 
-    static final Logger log = LoggerFactory.getLogger(Watermark.class);
-    public Phrase watermark =
-        new Phrase("For reference only. Not for use.",
-                new Font(FontFamily.HELVETICA, 45, Font.ITALIC,
-                BaseColor.RED.darker()));
+    private static final Logger log = LoggerFactory.getLogger(Watermark.class);
+    private static final int ROTATION = 45;
 
+    private final Phrase watermark =
+            new Phrase("For reference only. Not for use.",
+                    new Font(FontFamily.HELVETICA, 45, Font.NORMAL,
+                            BaseColor.RED.darker()));
 
-    public ByteArrayOutputStream stampPdfByteArray(byte[] os) throws IOException, DocumentException {
-        ByteArrayOutputStream dest = new ByteArrayOutputStream();
-        PdfReader reader = new PdfReader(os);
-        log.info("isEncrypted={}", reader.isEncrypted());
-        log.info("isOpenedWithFullPermissions={}", reader.isOpenedWithFullPermissions());
-        log.info("hasUsageRights={}", reader.hasUsageRights());
-        log.info("isMetadataEncrypted={}", reader.isMetadataEncrypted());
-
-        int number_of_page = reader.getNumberOfPages() + 1;
-        log.info("numberOfPages={}", number_of_page);
-        PdfStamper stamper = new PdfStamper(reader, dest);
-        for (int i = 1; i < number_of_page; i++) {
-            PdfContentByte under = stamper.getUnderContent(i);
-            PdfGState gState = new PdfGState();
-            gState.setFillOpacity(0.5f);
-            under.setGState(gState);
-            ColumnText.showTextAligned(under, Element.ALIGN_CENTER, watermark, 280, 390, 45);
-        }
-
-        PdfContentByte over = stamper.getOverContent(1);
-        over.saveState();
-        /*
-        PdfGState gs1 = new PdfGState();
-        gs1.setFillOpacity(0.8f);
-        over.setGState(gs1);
-        over.restoreState();
-        */
-        stamper.close();
+    public ByteArrayOutputStream stampPdfByteArray(byte[] source) throws IOException, DocumentException {
+        PdfReader reader = new PdfReader(source);
+        ByteArrayOutputStream out = stampPdfByteArray(reader);
         reader.close();
-        return dest;
+        return out;
     }
 
     public ByteArrayOutputStream stampPdfByteArray(ByteArrayOutputStream os) throws IOException, DocumentException {
-        ByteArrayOutputStream dest = new ByteArrayOutputStream();
         PdfReader reader = new PdfReader(os.toByteArray());
+        ByteArrayOutputStream out = stampPdfByteArray(reader);
+        reader.close();
+        return out;
+    }
+
+    private ByteArrayOutputStream stampPdfByteArray(PdfReader reader) throws IOException, DocumentException {
+        // if read only, don't bother further, simply return null
+        if (reader.isEncrypted() || reader.isMetadataEncrypted()) return null;
+        ByteArrayOutputStream dest = new ByteArrayOutputStream();
         int number_of_page = reader.getNumberOfPages() + 1;
         PdfStamper stamper = new PdfStamper(reader, dest);
         for (int i = 1; i < number_of_page; i++) {
@@ -62,7 +46,7 @@ public class Watermark {
             PdfGState gState = new PdfGState();
             gState.setFillOpacity(0.2f);
             under.setGState(gState);
-            ColumnText.showTextAligned(under, Element.ALIGN_CENTER, watermark, 280, 390, 45);
+            ColumnText.showTextAligned(under, Element.ALIGN_CENTER, watermark, 280, 390, ROTATION);
         }
 
         PdfContentByte over = stamper.getOverContent(1);
@@ -72,7 +56,7 @@ public class Watermark {
         over.setGState(gs1);
         over.restoreState();
         stamper.close();
-        reader.close();
         return dest;
     }
+
 }

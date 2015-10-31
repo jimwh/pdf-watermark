@@ -1,6 +1,5 @@
 package lab;
 
-import com.itextpdf.text.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
-
 @Configuration
 @EnableAutoConfiguration
 @Import(CustomerResourceLoader.class)
@@ -21,7 +18,7 @@ public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) throws IOException, DocumentException {
+    public static void main(String[] args) throws Exception {
 
         log.info("application start...");
         if( args.length != 2) {
