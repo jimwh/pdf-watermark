@@ -63,10 +63,11 @@ class ConsentFormFooter extends PdfPageEventHelper {
         table.setLockedWidth(true);
         //
         PdfPCell cellA = new PdfPCell(new Phrase(additionalFooter));
-        cellA.setColspan(1);
-        cellA.setBorder(Rectangle.NO_BORDER);
         cellA.setBorder(Rectangle.BOX);
-        cellA.setBorder(Rectangle.ALIGN_LEFT);
+        cellA.setBorderWidth(0.5f);
+
+        // cellA.setBorder(Rectangle.LEFT|Rectangle.RIGHT|Rectangle.RECTANGLE);
+        // cellA.setBorder(Rectangle.ALIGN_LEFT);
         table.addCell(cellA);
         //
         table.writeSelectedRows(0, -1, 34, 100, writer.getDirectContent());
