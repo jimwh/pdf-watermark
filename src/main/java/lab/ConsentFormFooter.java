@@ -53,21 +53,13 @@ class ConsentFormFooter extends PdfPageEventHelper {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et massa non turpis sagittis molestie. Proin ac nisi ligula. Donec suscipit scelerisque lacus, id varius purus egestas nec. Sed sit metus.\n\n";
 
         final PdfPTable table = new PdfPTable(1);
-        //table.setWidths(new int[] { 32, 12, 8, 28 });
-        try {
-            table.setWidths(new int[]{533});
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-        table.setTotalWidth(533);
+        table.setTotalWidth(540);
         table.setLockedWidth(true);
         //
-        PdfPCell cellA = new PdfPCell(new Phrase(additionalFooter));
+        final PdfPCell cellA = new PdfPCell(new Phrase(additionalFooter));
         cellA.setBorder(Rectangle.BOX);
         cellA.setBorderWidth(0.5f);
 
-        // cellA.setBorder(Rectangle.LEFT|Rectangle.RIGHT|Rectangle.RECTANGLE);
-        // cellA.setBorder(Rectangle.ALIGN_LEFT);
         table.addCell(cellA);
         //
         table.writeSelectedRows(0, -1, 34, 100, writer.getDirectContent());
