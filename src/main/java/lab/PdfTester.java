@@ -1,6 +1,7 @@
 package lab;
 
 import com.itextpdf.text.DocumentException;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,9 @@ public class PdfTester {
     private ConsentFormDatasheetPDFService pdfService;
 
     public void test(String inputFileName, String outputFileName) throws IOException, DocumentException {
+
         log.info("start from here: inputFileName={}, outputFileName={}", inputFileName, outputFileName);
+        log.info("now:{}", DateTime.now().toString("MM/dd/yyyy"));
         Assert.notNull(pdfService);
         ByteArrayOutputStream out = pdfService.createPDF(new ConsentHeader());
         Assert.notNull(out);

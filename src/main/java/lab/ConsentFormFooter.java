@@ -15,13 +15,20 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import static lab.PdfConstructionHelper.FONT_HELVETICA_8;
 
-/** Inner class to add a header and a footer. */
+/**
+ * Inner class to add a header and a footer.
+ */
 class ConsentFormFooter extends PdfPageEventHelper {
-    /** The header text. */
+    /**
+     * The header text.
+     */
     private final String footerText;
-    /** The template with the total number of pages. */
+    /**
+     * The template with the total number of pages.
+     */
     private PdfTemplate total;
 
     public ConsentFormFooter(final String footerText, final PdfTemplate total) {
@@ -36,9 +43,37 @@ class ConsentFormFooter extends PdfPageEventHelper {
      */
     @Override
     public void onOpenDocument(final PdfWriter writer, final Document document) {
+        // total = writer.getDirectContent().createTemplate(30, 16);
         total = writer.getDirectContent().createTemplate(30, 16);
     }
 
+    @Override
+    public void onEndPage(final PdfWriter writer, final Document document) {
+        final String additionalFooter =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras et massa non turpis sagittis molestie. Proin ac nisi ligula. Donec suscipit scelerisque lacus, id varius purus egestas nec. Sed sit metus.\n\n";
+
+        final PdfPTable table = new PdfPTable(1);
+        //table.setWidths(new int[] { 32, 12, 8, 28 });
+        try {
+            table.setWidths(new int[]{533});
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        table.setTotalWidth(533);
+        table.setLockedWidth(true);
+        //
+        PdfPCell cellA = new PdfPCell(new Phrase(additionalFooter));
+        cellA.setColspan(1);
+        cellA.setBorder(Rectangle.NO_BORDER);
+        cellA.setBorder(Rectangle.BOX);
+        cellA.setBorder(Rectangle.ALIGN_LEFT);
+        table.addCell(cellA);
+        //
+        table.writeSelectedRows(0, -1, 34, 100, writer.getDirectContent());
+
+    }
+
+    /*
     @Override
     public void onEndPage(final PdfWriter writer, final Document document) {
         final String additionalFooter =
@@ -81,6 +116,7 @@ class ConsentFormFooter extends PdfPageEventHelper {
         }
 
     }
+    */
 
     /**
      * Fills out the total number of pages before the document is closed.

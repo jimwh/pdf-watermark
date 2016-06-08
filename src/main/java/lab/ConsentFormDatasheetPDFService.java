@@ -41,7 +41,9 @@ public class ConsentFormDatasheetPDFService extends AbstractConsentFormDatasheet
     public void buildPDFDocument(ConsentHeader cfh, Document document, PdfWriter writer) throws DocumentException, IOException {
 
         // If the CF is attached to a IRB Protocol, then merge the data
-        document.setPageSize(PageSize.LETTER);
+        // document.setPageSize(PageSize.LETTER);
+        document.setPageSize(PageSize.A4);
+
         addConsentFormNumberOnFooter(cfh, writer);
         chapterNumber.set(1);
         //
@@ -53,6 +55,9 @@ public class ConsentFormDatasheetPDFService extends AbstractConsentFormDatasheet
         //
         addDynamicParagraphs(cfh, document);
         //
+        addSignatureLines(cfh, document);
+
+        addDynamicParagraphs(cfh, document);
         addSignatureLines(cfh, document);
     }
 
@@ -133,7 +138,15 @@ public class ConsentFormDatasheetPDFService extends AbstractConsentFormDatasheet
         String prevType = "";
         String currType = "Risk";
         String descr = "Description";
-        String paraText = "paragraph text";
+        String paraText = "paragraph text fsdsafaf dfasdfdsafa dsfafasdfa sdfassdfasdfa dfasdfa" +
+                "dafdadfsa dafdsafafsd dfdadsaf\n" +
+        "paragraph text fsdsafaf dfasdfdsafa dsfafasdfa sdfassdfasdfa dfasdfa\n" +
+                "dafdadfsa dafdsafafsd dfdadsaf\n" +
+        "paragraph text fsdsafaf dfasdfdsafa dsfafasdfa sdfassdfasdfa dfasdfa\n" +
+                "dafdadfsa dafdsafafsd dfdadsaf\n"+
+        "paragraph text fsdsafaf dfasdfdsafa dsfafasdfa sdfassdfasdfa dfasdfa\n" +
+                "dafdadfsa dafdsafafsd dfdadsaf\n" ;
+
         final Chapter chapter = StringUtils.equals(currType, prevType) ? newChapter() : getChapterWithHeader(currType, header);
         // If this is not the first section of content, insert a line return
         // to put space between the two sections

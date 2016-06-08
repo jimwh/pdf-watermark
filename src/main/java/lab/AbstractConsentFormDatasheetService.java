@@ -40,6 +40,7 @@ import static lab.PdfConstructionHelper.createPdfTableCellWithNull;
 public abstract class AbstractConsentFormDatasheetService {
     public ByteArrayOutputStream createPDF(ConsentHeader cfh) throws DocumentException, IOException {
         Document document = PDFUtil.newDocument();
+        document.setMargins(30f, 30f, 30f, 100f);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = PDFUtil.newWriter(document, baos);
 
